@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace keygen
@@ -13,6 +8,8 @@ namespace keygen
     public partial class Form1 : Form
     {
         readonly Generator Gen = new Generator();
+        private bool codeword = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -20,12 +17,29 @@ namespace keygen
 
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox2.Text = Gen.generateKey(textBox1.Text);
+            if (Gen.keyArray == null && Gen.algoritmArray == null)
+            {
+                textBox2.Text = "Загрузите файл ключа";
+            }
+            else if (!codeword)
+            {
+                textBox2.Text = "Кодовое слово не вводилось";
+            }
+            else if (Gen.keyArray.Length == 0 && Gen.algoritmArray.Length == 0)
+            {
+                textBox2.Text = "Файл ключа пуст";
+            }
+            else
+            {
+                textBox2.Text = Gen.generateKey(textBox1.Text);
+            }
+
         }
 
         private void textBox1_Click(object sender, EventArgs e)
         {
             textBox1.ResetText();
+            codeword = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -41,21 +55,24 @@ namespace keygen
                     lines[i] = line;
                 }
             }
-            Gen.arrayGenerator(lines);
-
-            var outString = "";
-            for (var i = 0; i < Gen.keyArray.GetLength(0); i++)
+            if (lines[0] == null || lines[1] == null) return;
             {
-                for (var j = 0; j < Gen.keyArray.GetLength(1); j++)
+                Gen.arrayGenerator(lines);
+
+                var outString = "";
+                for (var i = 0; i < Gen.keyArray.GetLength(0); i++)
                 {
-                    outString = outString + Gen.keyArray[i, j] + " ";
+                    for (var j = 0; j < Gen.keyArray.GetLength(1); j++)
+                    {
+                        outString = outString + Gen.keyArray[i, j] + " ";
+                    }
+                    outString = outString + "\n";
                 }
-                outString = outString + "\n";
+                label1.Text = outString;
+                var arrow = new string[8] { "↑", "↗", "→", "↘", "↓", "↙", "←", "↖" };
+                var temp = Gen.algoritmArray.Aggregate("", (current, item) => current + arrow[item] + " ");
+                label2.Text = temp;
             }
-            label1.Text = outString;
-            var arrow = new string[8] { "↑", "↗", "→", "↘", "↓", "↙", "←", "↖" };
-            var temp = Gen.algoritmArray.Aggregate("", (current, item) => current + arrow[item] + " ");
-            label2.Text = temp;
         }
     }
 }
