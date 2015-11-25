@@ -7,8 +7,8 @@ namespace keygen
     {
         public char[,] keyArray;
         public int[] algoritmArray;
-        private int stepCount;
-        private int stopKey = 0;
+        public int stepCount = 0;
+        public int stopKey = 0;
 
         public string generateKey(string line)
         {

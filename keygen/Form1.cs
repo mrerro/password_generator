@@ -31,8 +31,21 @@ namespace keygen
             }
             else
             {
-                textBox2.Text = Gen.generateKey(textBox1.Text);
+                Gen.stopKey = 0;
+                Gen.stepCount = 0;
+                var outLine = Gen.generateKey(textBox1.Text);
+                var numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+                for (var i = 0; i < outLine.Length; i++)
+                {
+                    if (!numbers.Where(g => g == outLine[i]).Any())
+                    {
+                        textBox2.Text = outLine.Substring(0, 0 + i) + char.ToUpper(outLine[i]) +
+                                        outLine.Substring(i + 1);
+                        break;
+                    }
+                }
             }
+
 
         }
 
